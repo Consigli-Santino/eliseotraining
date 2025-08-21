@@ -7,6 +7,11 @@ import Home from "./pages/Home.jsx"
 import ProtectedRoute from './protectedroute/ProtectedRoute.jsx'
 import AppLayout from './pages/Layout/AppLayout.jsx'
 import Unauthorized from "./pages/Unauthorized.jsx"
+import UsersCrud from "./pages/admin/Users.jsx";
+import CategoriesCrud from "./pages/admin/Categorias.jsx";
+import ExercisesCrud from "./pages/admin/Ejercicios.jsx";
+import PlanesCrud from "./pages/admin/PlanesCrud.jsx";
+import PlanViewer from "./pages/planviewer/PlanViewer.jsx";
 
 function App() {
     return (
@@ -26,7 +31,31 @@ function App() {
                                 <Home />
                             </ProtectedRoute>
                         } />
-
+                            <Route path="/users" element={
+                                <ProtectedRoute path="/users">
+                                    <UsersCrud/>
+                                </ProtectedRoute>
+                            } />
+                        <Route path="/categories" element={
+                            <ProtectedRoute path="/categories">
+                                <CategoriesCrud/>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/exercises" element={
+                            <ProtectedRoute path="/exercises">
+                                <ExercisesCrud/>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/planes" element={
+                            <ProtectedRoute path="/planes">
+                                <PlanesCrud/>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/miplan" element={
+                            <ProtectedRoute path="/miplan">
+                                <PlanViewer/>
+                            </ProtectedRoute>
+                        } />
                     </Route>
                 </Routes>
             </BrowserRouter>

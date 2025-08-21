@@ -15,12 +15,7 @@ const AppLayout = () => {
         return <Outlet />;
     }
 
-    const sideBarOptions = SideBarOptionsService.getOptions(user?.roles || []);
     const homeBarOptions = HomeBarOptionsService.getOptions(user?.roles || []);
-
-    const filteredButtonsSideBar = sideBarOptions.filter((option) => {
-        return availableRoutesSideBar.includes(option.path);
-    });
 
     const filteredButtonsHome = homeBarOptions.filter((option) => {
         return availableRoutesHomeBar.includes(option.path);
@@ -28,10 +23,7 @@ const AppLayout = () => {
 
     return (
         <div className="d-flex flex-column min-vh-100">
-            {/* Navbar fijo en todas las páginas autenticadas */}
-            <Navbar userOptions={filteredButtonsSideBar} />
 
-            {/* Contenido dinámico que cambia según la ruta */}
             <div className="flex-grow-1">
                 <Outlet />
             </div>

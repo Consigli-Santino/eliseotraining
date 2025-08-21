@@ -1,3 +1,5 @@
+
+
 class HomeBarOptionsService {
     optionsHomeBar = [
         {
@@ -5,12 +7,6 @@ class HomeBarOptionsService {
             "name": "Inicio",
             "roles": ["alumno","superAdmin", "profesor"],
             "path": "/home"
-        },
-        {
-            "icon": "calendar-check",
-            "name": "Plan",
-            "roles": ["alumno"],
-            "path": "/planes"
         },
         {
             "icon": "clipboard-list",
@@ -25,10 +21,34 @@ class HomeBarOptionsService {
             "path": "/users"
         },
         {
-            "icon": "person-badge",
+            "icon": "user-plus",
             "name": "Alumnos",
             "roles": ["profesor"],
             "path": "/alumnos"
+        },
+        {
+            "icon": "tags",
+            "name": "Categorias",
+            "roles": ["profesor","superAdmin"],
+            "path": "/categories"
+        },
+        {
+            "icon": "dumbbell",
+            "name": "Ejercicios",
+            "roles": ["profesor","superAdmin"],
+            "path": "/exercises"
+        },
+        {
+            "icon": "clipboard-check",
+            "name": "Planes",
+            "roles": ["profesor","superAdmin"],
+            "path": "/planes"
+        },
+        {
+            "icon": "calendar-check",
+            "name": "Mi Plan",
+            "roles": ["profesor","superAdmin","alumno"],
+            "path": "/miplan"
         }
     ]
 
