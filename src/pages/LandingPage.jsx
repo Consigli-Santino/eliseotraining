@@ -28,6 +28,7 @@ import perfilNavbar from '../assets/perfilNavbar.jpeg';
 import defensaPersonal from '../assets/defensaPersonalV1.jpeg';
 import peleaEli from '../assets/peleaEli.mp4';
 import gifkata from '../assets/gifkata.mp4';
+import eliseoQueli from '../assets/eliseoQueli.jpeg';
 import '../styles/styles.css';
 
 const LandingPage = () => {
@@ -68,7 +69,7 @@ const LandingPage = () => {
             title: "Fitness Personal",
             description: "Entrenamiento personalizado para mejorar tu condición física integral",
             features: ["Entrenamiento funcional", "Acondicionamiento físico", "Nutrición deportiva"],
-            image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop&crop=center"
+            image: entrenandoAbuela
         }
     ];
 
@@ -579,10 +580,10 @@ const LandingPage = () => {
                                 <div className="col-12">
                                     <div className="gallery-item">
                                         <img
-                                            src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=180&fit=crop&crop=center"
+                                            src={eliseoQueli}
                                             alt="Fitness Personal"
                                             className="w-100 object-fit-cover"
-                                            style={{height: '180px'}}
+                                            style={{height: '700px'}}
                                         />
                                         <div className="gallery-overlay">
                                             <h5 className="fw-bold">Fitness</h5>
@@ -592,33 +593,6 @@ const LandingPage = () => {
                             </div>
                         </div>
 
-                        <div className="col-lg-4">
-                            <div className="gallery-item">
-                                <img
-                                    src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400&h=250&fit=crop&crop=center"
-                                    alt="Instalaciones"
-                                    className="w-100 object-fit-cover"
-                                    style={{height: '250px'}}
-                                />
-                                <div className="gallery-overlay">
-                                    <h5 className="fw-bold">Progreso</h5>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="col-lg-8">
-                            <div className="gallery-item">
-                                <img
-                                    src={entrenandoAbuela}
-                                    alt="Grupo de Entrenamiento"
-                                    className="w-100 object-fit-cover"
-                                    style={{height: '250px'}}
-                                />
-                                <div className="gallery-overlay">
-                                    <h5 className="fw-bold">Entrenamientos Grupales</h5>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>
