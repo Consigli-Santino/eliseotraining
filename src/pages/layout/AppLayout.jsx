@@ -1,8 +1,6 @@
 import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import Navbar from "../Navbar.jsx";
 import HomeBar from "../HomeBar.jsx";
-import SideBarOptionsService from "../../services/SideBarOptionsService.js";
 import HomeBarOptionsService from "../../services/HomeBarOptionsService.js";
 import useAuth from "../../context/AuthContext.jsx";
 
