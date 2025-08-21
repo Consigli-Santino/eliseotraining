@@ -12,7 +12,6 @@ import CategoriesCrud from "./pages/admin/Categorias.jsx";
 import ExercisesCrud from "./pages/admin/Ejercicios.jsx";
 import PlanesCrud from "./pages/admin/PlanesCrud.jsx";
 import PlanViewer from "./pages/planviewer/PlanViewer.jsx";
-
 function App() {
     return (
         <AuthProvider>
