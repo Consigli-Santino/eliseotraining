@@ -5,7 +5,7 @@ import LandingPage from "./pages/LandingPage.jsx"
 import Login from "./pages/Login.jsx"
 import Home from "./pages/Home.jsx"
 import ProtectedRoute from './protectedroute/ProtectedRoute.jsx'
-import AppLayout from './pages/Layout/AppLayout.jsx'
+import AppLayout from './pages/Layout/AppLayout'
 import Unauthorized from "./pages/Unauthorized.jsx"
 import UsersCrud from "./pages/admin/Users.jsx";
 import CategoriesCrud from "./pages/admin/Categorias.jsx";
