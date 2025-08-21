@@ -817,3 +817,45 @@ body {
         justify-content: center !important;
     }
 }
+/* Smooth scroll para toda la página */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Offset para compensar la navbar fija */
+section[id] {
+    scroll-margin-top: 80px;
+}
+
+/* Mejorar la navegación en móvil */
+@media (max-width: 991.98px) {
+    section[id] {
+        scroll-margin-top: 70px;
+    }
+}
+
+/* Asegurar que los enlaces hash no causen problemas */
+a[href^="#"] {
+    text-decoration: none;
+}
+
+/* Para navegadores que no soportan scroll-behavior */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+/* Mejorar la transición del navbar móvil */
+.navbar-collapse {
+    transition: all 0.3s ease-in-out;
+}
+
+.navbar-toggler {
+    border: none !important;
+    padding: 4px 8px;
+}
+
+.navbar-toggler:focus {
+    box-shadow: none;
+}

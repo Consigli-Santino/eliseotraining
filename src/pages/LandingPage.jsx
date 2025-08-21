@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { HashLink as Link } from 'react-router-hash-link';
 import {
     Phone,
     MessageCircle,
@@ -38,7 +39,44 @@ const LandingPage = () => {
 
     useEffect(() => {
         setIsVisible(true);
+
+        // Manejar navegación directa con hash
+        const handleInitialHash = () => {
+            const hash = window.location.hash;
+            if (hash) {
+                setTimeout(() => {
+                    const element = document.querySelector(hash);
+                    if (element) {
+                        const navbarHeight = 80;
+                        const elementPosition = element.offsetTop - navbarHeight;
+                        window.scrollTo({
+                            top: elementPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 100);
+            }
+        };
+
+        handleInitialHash();
     }, []);
+
+    // Función para cerrar menú móvil al hacer clic
+    const handleNavClick = () => {
+        if (mobileMenuOpen) {
+            setMobileMenuOpen(false);
+        }
+    };
+
+    // Función personalizada para scroll con offset
+    const scrollWithOffset = (el) => {
+        const yCoordinate = el.offsetTop - 80; // 80px offset para navbar
+        const yOffset = -10; // offset adicional si necesitas
+        window.scrollTo({
+            top: yCoordinate + yOffset,
+            behavior: 'smooth'
+        });
+    };
 
     const whatsappLink = "https://wa.me/5493517503115?text=Hola!%20me%20encantaria%20tomar%20una%20clase%20de%20entrenamiento%20con%20Eliseo";
 
@@ -112,7 +150,7 @@ const LandingPage = () => {
             {/* Navigation */}
             <nav className="navbar navbar-expand-lg navbar-executive">
                 <div className="container">
-                    <a className="navbar-brand d-flex align-items-center text-white fw-bold fs-4" href="#inicio">
+                    <Link smooth to="#inicio" className="navbar-brand d-flex align-items-center text-white fw-bold fs-4">
                         <img
                             src={perfilNavbar}
                             alt="Eliseo Lariguet Logo"
@@ -120,7 +158,7 @@ const LandingPage = () => {
                             style={{width: '32px', height: '32px', objectFit: 'cover'}}
                         />
                         Eliseo Lariguet
-                    </a>
+                    </Link>
 
                     <button
                         className="navbar-toggler border-0"
@@ -134,19 +172,59 @@ const LandingPage = () => {
                     <div className={`collapse navbar-collapse ${mobileMenuOpen ? 'show' : ''}`}>
                         <ul className="navbar-nav ms-auto align-items-center">
                             <li className="nav-item">
-                                <a className="nav-link text-white-50 fw-medium px-3" href="#inicio">Inicio</a>
+                                <Link
+                                    smooth
+                                    to="#inicio"
+                                    className="nav-link text-white-50 fw-medium px-3"
+                                    scroll={scrollWithOffset}
+                                    onClick={handleNavClick}
+                                >
+                                    Inicio
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link text-white-50 fw-medium px-3" href="#sobre-mi">Sobre Mí</a>
+                                <Link
+                                    smooth
+                                    to="#sobre-mi"
+                                    className="nav-link text-white-50 fw-medium px-3"
+                                    scroll={scrollWithOffset}
+                                    onClick={handleNavClick}
+                                >
+                                    Sobre Mí
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link text-white-50 fw-medium px-3" href="#servicios">Servicios</a>
+                                <Link
+                                    smooth
+                                    to="#servicios"
+                                    className="nav-link text-white-50 fw-medium px-3"
+                                    scroll={scrollWithOffset}
+                                    onClick={handleNavClick}
+                                >
+                                    Servicios
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link text-white-50 fw-medium px-3" href="#testimonios">Testimonios</a>
+                                <Link
+                                    smooth
+                                    to="#testimonios"
+                                    className="nav-link text-white-50 fw-medium px-3"
+                                    scroll={scrollWithOffset}
+                                    onClick={handleNavClick}
+                                >
+                                    Testimonios
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link text-white-50 fw-medium px-3" href="#contacto">Contacto</a>
+                                <Link
+                                    smooth
+                                    to="#contacto"
+                                    className="nav-link text-white-50 fw-medium px-3"
+                                    scroll={scrollWithOffset}
+                                    onClick={handleNavClick}
+                                >
+                                    Contacto
+                                </Link>
                             </li>
                             <li className="nav-item ms-2">
                                 <a href={whatsappLink} className="btn btn-outline-light btn-sm">
@@ -196,10 +274,15 @@ const LandingPage = () => {
                                         <WhatsAppIcon className="whatsapp-icon-sm me-2" />
                                         Comenzar Entrenamiento
                                     </a>
-                                    <a href="#servicios" className="btn btn-outline-light btn-lg px-4 py-3 fw-semibold">
+                                    <Link
+                                        smooth
+                                        to="#servicios"
+                                        className="btn btn-outline-light btn-lg px-4 py-3 fw-semibold"
+                                        scroll={scrollWithOffset}
+                                    >
                                         Ver Servicios
                                         <ArrowRight className="w-5 h-5 ms-2" />
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
@@ -486,6 +569,49 @@ const LandingPage = () => {
                 </div>
             </section>
 
+            {/* Testimonials Section */}
+            <section id="testimonios" className="py-6 bg-light">
+                <div className="container">
+                    <div className="text-center mb-5">
+                        <h2 className="display-5 fw-bold mb-3">
+                            Lo que dicen mis <span className="text-danger">Estudiantes</span>
+                        </h2>
+                        <p className="fs-5 text-muted">
+                            Testimonios reales de personas que han transformado sus vidas
+                        </p>
+                    </div>
+
+                    <div className="row g-4">
+                        {testimonials.map((testimonial, index) => (
+                            <div key={index} className="col-lg-4 col-md-6">
+                                <div className="card card-executive h-100 border-0 rounded-4 text-center">
+                                    <div className="card-body p-4">
+                                        <img
+                                            src={testimonial.image}
+                                            alt={testimonial.name}
+                                            className="rounded-circle mb-3"
+                                            style={{width: '80px', height: '80px', objectFit: 'cover'}}
+                                        />
+
+                                        <div className="mb-3">
+                                            {[...Array(testimonial.rating)].map((_, idx) => (
+                                                <Star key={idx} className="w-4 h-4 text-warning fill-current" />
+                                            ))}
+                                        </div>
+
+                                        <p className="text-muted mb-4 fs-6 fst-italic">
+                                            "{testimonial.text}"
+                                        </p>
+
+                                        <h6 className="fw-bold mb-1">{testimonial.name}</h6>
+                                        <small className="text-muted">{testimonial.role}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
 
             {/* Gallery Section */}
             <section className="py-6">
@@ -537,7 +663,7 @@ const LandingPage = () => {
                                             src={eliseoQueli}
                                             alt="Fitness Personal"
                                             className="w-100 object-fit-cover"
-                                            style={{height: '700px'}}
+                                            style={{height: '180px'}}
                                         />
                                         <div className="gallery-overlay">
                                             <h5 className="fw-bold">Fitness</h5>
@@ -546,7 +672,6 @@ const LandingPage = () => {
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </section>
