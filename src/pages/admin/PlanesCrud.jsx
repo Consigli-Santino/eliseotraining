@@ -222,7 +222,7 @@ const PlanesCrud = () => {
     };
 
     return (
-        <div className="bg-white min-vh-100" style={{paddingTop: '76px'}}>
+        <div className="bg-white min-vh-100" >
             {/* Header Section */}
             <section className="py-4" style={{background: '#1a1a1a'}}>
                 <div className="container">
