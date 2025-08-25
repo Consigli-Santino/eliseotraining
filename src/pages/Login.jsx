@@ -80,7 +80,7 @@ const Login = () => {
 
         try {
             // Llamada a la API en localhost:7000
-            const response = await fetch('https://ef4531e03f6b.ngrok-free.app/usuarios/login', {
+            const response = await fetch('https://0b04786fe6f2.ngrok-free.app/usuarios/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
