@@ -207,17 +207,6 @@ const LandingPage = () => {
                             <li className="nav-item">
                                 <Link
                                     smooth
-                                    to="#testimonios"
-                                    className="nav-link text-white-50 fw-medium px-3"
-                                    scroll={scrollWithOffset}
-                                    onClick={handleNavClick}
-                                >
-                                    Testimonios
-                                </Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link
-                                    smooth
                                     to="#contacto"
                                     className="nav-link text-white-50 fw-medium px-3"
                                     scroll={scrollWithOffset}
