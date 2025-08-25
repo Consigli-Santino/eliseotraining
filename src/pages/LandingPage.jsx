@@ -569,49 +569,6 @@ const LandingPage = () => {
                 </div>
             </section>
 
-            {/* Testimonials Section */}
-            <section id="testimonios" className="py-6 bg-light">
-                <div className="container">
-                    <div className="text-center mb-5">
-                        <h2 className="display-5 fw-bold mb-3">
-                            Lo que dicen mis <span className="text-danger">Estudiantes</span>
-                        </h2>
-                        <p className="fs-5 text-muted">
-                            Testimonios reales de personas que han transformado sus vidas
-                        </p>
-                    </div>
-
-                    <div className="row g-4">
-                        {testimonials.map((testimonial, index) => (
-                            <div key={index} className="col-lg-4 col-md-6">
-                                <div className="card card-executive h-100 border-0 rounded-4 text-center">
-                                    <div className="card-body p-4">
-                                        <img
-                                            src={testimonial.image}
-                                            alt={testimonial.name}
-                                            className="rounded-circle mb-3"
-                                            style={{width: '80px', height: '80px', objectFit: 'cover'}}
-                                        />
-
-                                        <div className="mb-3">
-                                            {[...Array(testimonial.rating)].map((_, idx) => (
-                                                <Star key={idx} className="w-4 h-4 text-warning fill-current" />
-                                            ))}
-                                        </div>
-
-                                        <p className="text-muted mb-4 fs-6 fst-italic">
-                                            "{testimonial.text}"
-                                        </p>
-
-                                        <h6 className="fw-bold mb-1">{testimonial.name}</h6>
-                                        <small className="text-muted">{testimonial.role}</small>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
 
             {/* Gallery Section */}
             <section className="py-6">
