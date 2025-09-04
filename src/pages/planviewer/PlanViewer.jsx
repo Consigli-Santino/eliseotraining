@@ -17,6 +17,7 @@ import {
     MessageSquare
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { WhatsAppButton, getWhatsAppLink } from '../../components/WhatsAppContact';
 import '../../styles/styles.css';
 
 const PlanViewer = () => {
@@ -87,7 +88,7 @@ const PlanViewer = () => {
         }));
     };
 
-    const whatsappLink = "https://wa.me/5493517503115?text=Hola%20Eliseo!%20Tengo%20una%20consulta%20sobre%20mi%20plan%20de%20entrenamiento.";
+    const whatsappLink = getWhatsAppLink("Hola Eliseo! Tengo una consulta sobre mi plan de entrenamiento.");
 
     if (loading) {
         return (

@@ -21,6 +21,7 @@ import {
     Menu,
     X
 } from 'lucide-react';
+import { WhatsAppIcon, WhatsAppButton, WhatsAppFloating, getWhatsAppLink } from '../components/WhatsAppContact';
 import fotoPerfil from '../assets/perfilEliseo.jpeg';
 import entrenandoAbuela from '../assets/entrenandoAbuela.jpeg';
 import patada from '../assets/patada.jpeg';
@@ -78,14 +79,7 @@ const LandingPage = () => {
         });
     };
 
-    const whatsappLink = "https://wa.me/5493517503115?text=Hola!%20me%20encantaria%20tomar%20una%20clase%20de%20entrenamiento%20con%20Eliseo";
-
-    // Componente para el icono de WhatsApp oficial
-    const WhatsAppIcon = ({ className }) => (
-        <svg className={className} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.434 3.488"/>
-        </svg>
-    );
+    const whatsappLink = getWhatsAppLink("Hola! me encantaría tomar una clase de entrenamiento con Eliseo");
 
     const services = [
         {
@@ -216,10 +210,13 @@ const LandingPage = () => {
                                 </Link>
                             </li>
                             <li className="nav-item ms-2">
-                                <a href={whatsappLink} className="btn btn-outline-light btn-sm">
-                                    <WhatsAppIcon className="whatsapp-icon-sm me-1" />
+                                <WhatsAppButton
+                                    message="Hola! me encantaría tomar una clase de entrenamiento con Eliseo"
+                                    className="btn btn-outline-light btn-sm"
+                                    iconClassName="whatsapp-icon-sm me-1"
+                                >
                                     WhatsApp
-                                </a>
+                                </WhatsAppButton>
                             </li>
                         </ul>
                     </div>
@@ -259,10 +256,13 @@ const LandingPage = () => {
                                 </div>
 
                                 <div className="d-flex flex-column flex-sm-row gap-3">
-                                    <a href={whatsappLink} className="btn btn-primary-red btn-lg px-4 py-3 fw-semibold">
-                                        <WhatsAppIcon className="whatsapp-icon-sm me-2" />
+                                    <WhatsAppButton
+                                        message="Hola! me encantaría tomar una clase de entrenamiento con Eliseo"
+                                        className="btn btn-primary-red btn-lg px-4 py-3 fw-semibold"
+                                        iconClassName="whatsapp-icon-sm me-2"
+                                    >
                                         Comenzar Entrenamiento
-                                    </a>
+                                    </WhatsAppButton>
                                     <Link
                                         smooth
                                         to="#servicios"
@@ -343,10 +343,13 @@ const LandingPage = () => {
                                 <p className="text-muted mb-4">
                                     Contacta con Eliseo para solicitar tu cuenta personalizada y comenzar tu entrenamiento digital.
                                 </p>
-                                <a href={whatsappLink} className="btn btn-primary-red btn-lg mb-3">
-                                    <WhatsAppIcon className="whatsapp-icon-sm me-2" />
+                                <WhatsAppButton
+                                    message="Hola! me encantaría tomar una clase de entrenamiento con Eliseo"
+                                    className="btn btn-primary-red btn-lg mb-3"
+                                    iconClassName="whatsapp-icon-sm me-2"
+                                >
                                     Solicitar Cuenta
-                                </a>
+                                </WhatsAppButton>
                             </div>
                         </div>
 
@@ -492,10 +495,13 @@ const LandingPage = () => {
                                             ))}
                                         </ul>
 
-                                        <a href={whatsappLink} className="btn btn-outline-red w-100">
+                                        <WhatsAppButton
+                                            message="Hola! me encantaría tomar una clase de entrenamiento con Eliseo"
+                                            className="btn btn-outline-red w-100"
+                                        >
                                             Más Información
                                             <ArrowRight className="w-4 h-4 ms-2" />
-                                        </a>
+                                        </WhatsAppButton>
                                     </div>
                                 </div>
                             </div>
@@ -533,10 +539,13 @@ const LandingPage = () => {
                             </div>
 
                             <div className="mt-5 mb-3">
-                                <a href={whatsappLink} className="btn btn-primary-red btn-lg">
-                                    <WhatsAppIcon className="whatsapp-icon-sm me-2" />
+                                <WhatsAppButton
+                                    message="Hola! me encantaría tomar una clase de entrenamiento con Eliseo"
+                                    className="btn btn-primary-red btn-lg"
+                                    iconClassName="whatsapp-icon-sm me-2"
+                                >
                                     Empezar Ahora
-                                </a>
+                                </WhatsAppButton>
                             </div>
                         </div>
 
@@ -642,7 +651,7 @@ const LandingPage = () => {
                                         </div>
                                         <div>
                                             <h6 className="fw-bold mb-1">Teléfono</h6>
-                                            <p className="mb-0 opacity-75">+54 9 351 750 3115</p>
+                                            <p className="mb-0 opacity-75">+54 9 351 761-7468</p>
                                         </div>
                                     </div>
                                 </div>
@@ -674,10 +683,13 @@ const LandingPage = () => {
                         </div>
 
                         <div className="col-lg-4 text-center">
-                            <a href={whatsappLink} className="btn btn-light btn-lg w-100 fw-semibold py-3">
-                                <WhatsAppIcon className="whatsapp-icon-sm me-2" />
+                            <WhatsAppButton
+                                message="Hola! me encantaría tomar una clase de entrenamiento con Eliseo"
+                                className="btn btn-light btn-lg w-100 fw-semibold py-3"
+                                iconClassName="whatsapp-icon-sm me-2"
+                            >
                                 Escribir por WhatsApp
-                            </a>
+                            </WhatsAppButton>
                             <p className="mt-3 mb-0 opacity-75 small">
                                 Respuesta garantizada en menos de 2 horas
                             </p>
@@ -715,14 +727,9 @@ const LandingPage = () => {
             </footer>
 
             {/* WhatsApp Floating Button */}
-            <a
-                href={whatsappLink}
-                className="whatsapp-float"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                <WhatsAppIcon className="whatsapp-icon" />
-            </a>
+            <WhatsAppFloating
+                message="Hola! me encantaría tomar una clase de entrenamiento con Eliseo"
+            />
         </div>
     );
 };
