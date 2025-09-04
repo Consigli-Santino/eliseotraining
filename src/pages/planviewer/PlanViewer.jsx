@@ -11,6 +11,8 @@ import {
     RotateCcw,
     Eye,
     ChevronRight,
+    ChevronDown,
+    ChevronUp,
     Play
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
@@ -22,6 +24,7 @@ const PlanViewer = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedDay, setSelectedDay] = useState(0);
+    const [expandedBlocks, setExpandedBlocks] = useState({});
 
     const API_BASE = import.meta.env.VITE_BACKEND;
 
@@ -73,17 +76,14 @@ const PlanViewer = () => {
         }
     };
 
-    const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString('es-ES', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-    };
 
-    const getTotalExercises = () => {
-        if (!plan?.dias_plan) return 0;
-        return plan.dias_plan.reduce((total, dia) => total + (dia.detalle_ejercicios?.length || 0), 0);
+
+    // Toggle block expansion
+    const toggleBlock = (bloqueId) => {
+        setExpandedBlocks(prev => ({
+            ...prev,
+            [bloqueId]: !prev[bloqueId]
+        }));
     };
 
     const whatsappLink = "https://wa.me/5493517503115?text=Hola%20Eliseo!%20Tengo%20una%20consulta%20sobre%20mi%20plan%20de%20entrenamiento.";
@@ -146,7 +146,7 @@ const PlanViewer = () => {
     return (
         <div className="bg-white min-vh-100" >
             {/* Header Section - Más compacto */}
-            <section className="py-3" style={{background: '#1a1a1a'}}>
+            <section className="py-3 planviewer-header" style={{background: '#1a1a1a'}}>
                 <div className="container">
                     <div className="row align-items-center">
                         <div className="col-8">
@@ -175,7 +175,7 @@ const PlanViewer = () => {
 
 
             {/* Days Navigation - Mobile Optimized */}
-            <section className="py-3">
+            <section className="py-3 planviewer-days-nav">
                 <div className="container">
                     {/* Mobile Pills Navigation */}
                     <div className="mb-3">
@@ -183,15 +183,12 @@ const PlanViewer = () => {
                             {plan.dias_plan?.map((dia, index) => (
                                 <button
                                     key={dia.dia_plan_id}
-                                    className={`btn btn-sm flex-shrink-0 ${
-                                        selectedDay === index ? 'btn-primary-red' : 'btn-outline-primary'
+                                    className={`btn btn-sm flex-shrink-0 planviewer-day-pill ${
+                                        selectedDay === index ? 'btn-primary-red-active' : 'btn-primary-red-inactive'
                                     }`}
                                     onClick={() => setSelectedDay(index)}
                                 >
                                     Día {dia.num_dia}
-                                    <span className="badge bg-white text-dark ms-1">
-                                        {dia.detalle_ejercicios?.length || 0}
-                                    </span>
                                 </button>
                             ))}
                         </div>
@@ -199,7 +196,7 @@ const PlanViewer = () => {
 
                     {/* Selected Day Content - Compact */}
                     {plan.dias_plan && plan.dias_plan[selectedDay] && (
-                        <div className="card border-0 rounded-3 shadow-sm">
+                        <div className="card border-0 rounded-3 shadow-sm planviewer-main-card">
                             <div className="card-header bg-light border-0 rounded-top-3 py-2">
                                 <div className="d-flex align-items-center justify-content-between">
                                     <div>
@@ -207,7 +204,7 @@ const PlanViewer = () => {
                                             {plan.dias_plan[selectedDay].nombre_dia}
                                         </h6>
                                         <small className="text-muted">
-                                            {plan.dias_plan[selectedDay].detalle_ejercicios?.length || 0} ejercicios
+                                            {plan.dias_plan[selectedDay].bloques_ejercicio?.reduce((total, bloque) => total + (bloque.detalle_ejercicios?.length || 0), 0) || 0} ejercicios
                                         </small>
                                     </div>
                                     <div className="bg-primary-red rounded-3 p-2">
@@ -217,15 +214,49 @@ const PlanViewer = () => {
                             </div>
 
                             <div className="card-body p-0">
-                                {plan.dias_plan[selectedDay].detalle_ejercicios?.length > 0 ? (
+                                {plan.dias_plan[selectedDay].bloques_ejercicio?.some(bloque => bloque.detalle_ejercicios?.length > 0) ? (
                                     <div className="list-group list-group-flush">
-                                        {plan.dias_plan[selectedDay].detalle_ejercicios
-                                            .sort((a, b) => a.orden - b.orden)
-                                            .map((detalle, index) => (
-                                                <div key={detalle.detalle_id} className="list-group-item border-0 py-3">
+                                        {plan.dias_plan[selectedDay].bloques_ejercicio
+                                            .sort((a, b) => a.orden_bloque - b.orden_bloque)
+                                            .map((bloque, bloqueIndex) => (
+                                                <div key={bloque.bloque_id}>
+                                                    {/* Block Header */}
+                                                    <div 
+                                                        className="list-group-item border-0 bg-light py-2 planviewer-block-header"
+                                                        style={{cursor: 'pointer'}}
+                                                        onClick={() => toggleBlock(bloque.bloque_id)}
+                                                    >
+                                                        <div className="d-flex align-items-center justify-content-between">
+                                                            <div className="d-flex align-items-center">
+                                                                <div className="bg-primary-red rounded-2 p-1 me-2">
+                                                                    <Dumbbell className="w-3 h-3 text-white" />
+                                                                </div>
+                                                                <h6 className="fw-bold mb-0 me-2">{bloque.nombre_bloque}</h6>
+                                                                {bloque.descripcion && (
+                                                                    <small className="text-muted">• {bloque.descripcion}</small>
+                                                                )}
+                                                            </div>
+                                                            <div className="d-flex align-items-center">
+                                                                <small className="text-muted me-2">
+                                                                    {bloque.detalle_ejercicios?.length || 0} ejercicios
+                                                                </small>
+                                                                {expandedBlocks[bloque.bloque_id] ? (
+                                                                    <ChevronUp className="w-4 h-4 text-muted" />
+                                                                ) : (
+                                                                    <ChevronDown className="w-4 h-4 text-muted" />
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    {/* Block Exercises */}
+                                                    {expandedBlocks[bloque.bloque_id] && bloque.detalle_ejercicios
+                                                        ?.sort((a, b) => a.orden - b.orden)
+                                                        .map((detalle, index) => (
+                                                <div key={detalle.detalle_id} className="list-group-item border-0 py-3 planviewer-exercise">
                                                     <div className="d-flex align-items-start">
                                                         <div className="me-3 flex-shrink-0">
-                                                        <span className="badge bg-primary rounded-pill">
+                                                        <span className="badge bg-dark-red rounded-pill">
                                                             {detalle.orden}
                                                         </span>
                                                         </div>
@@ -243,7 +274,7 @@ const PlanViewer = () => {
                                                             </div>
 
                                                             {/* Compact info grid */}
-                                                            <div className="row g-1">
+                                                            <div className="row g-1 planviewer-info-grid">
                                                                 <div className="col-3">
                                                                     <div className="bg-light rounded-2 p-1 text-center">
                                                                         <div className="small text-muted">Series</div>
@@ -271,6 +302,8 @@ const PlanViewer = () => {
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
+                                                        ))}
                                                 </div>
                                             ))}
                                     </div>

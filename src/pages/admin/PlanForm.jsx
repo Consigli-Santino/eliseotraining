@@ -8,7 +8,8 @@ import {
     Calendar,
     ChevronDown,
     ChevronUp,
-    AlertTriangle
+    AlertTriangle,
+    Layers
 } from 'lucide-react';
 import '../../styles/styles.css';
 
@@ -27,6 +28,7 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
     });
 
     const [expandedDays, setExpandedDays] = useState({});
+    const [expandedBlocks, setExpandedBlocks] = useState({});
 
     const API_BASE = import.meta.env.VITE_BACKEND;
 
@@ -56,24 +58,35 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
                     dia_plan_id: dia.dia_plan_id,
                     num_dia: dia.num_dia,
                     nombre_dia: dia.nombre_dia,
-                    detalle_ejercicios: dia.detalle_ejercicios?.map(detalle => ({
-                        detalle_id: detalle.detalle_id,
-                        ejercicio_id: detalle.ejercicio_id,
-                        orden: detalle.orden,
-                        series: detalle.series || '',
-                        repeticiones: detalle.repeticiones || '',
-                        peso: detalle.peso || '',
-                        pausa: detalle.pausa || ''
+                    bloques_ejercicio: dia.bloques_ejercicio?.map(bloque => ({
+                        bloque_id: bloque.bloque_id,
+                        nombre_bloque: bloque.nombre_bloque,
+                        orden_bloque: bloque.orden_bloque,
+                        descripcion: bloque.descripcion || '',
+                        detalle_ejercicios: bloque.detalle_ejercicios?.map(detalle => ({
+                            detalle_id: detalle.detalle_id,
+                            ejercicio_id: detalle.ejercicio_id,
+                            orden: detalle.orden,
+                            series: detalle.series || '',
+                            repeticiones: detalle.repeticiones || '',
+                            peso: detalle.peso || '',
+                            pausa: detalle.pausa || ''
+                        })) || []
                     })) || []
                 })) || []
             });
 
-            // Expand all days when editing
-            const expandedState = {};
-            plan.dias_plan?.forEach((dia, index) => {
-                expandedState[index] = true;
+            // Expand all days and blocks when editing
+            const expandedDaysState = {};
+            const expandedBlocksState = {};
+            plan.dias_plan?.forEach((dia, dayIndex) => {
+                expandedDaysState[dayIndex] = true;
+                dia.bloques_ejercicio?.forEach((bloque, blockIndex) => {
+                    expandedBlocksState[`${dayIndex}-${blockIndex}`] = true;
+                });
             });
-            setExpandedDays(expandedState);
+            setExpandedDays(expandedDaysState);
+            setExpandedBlocks(expandedBlocksState);
         } else {
             // Reset for new plan
             setFormData({
@@ -82,6 +95,7 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
                 dias_plan: []
             });
             setExpandedDays({});
+            setExpandedBlocks({});
         }
     }, [plan, isEditing]);
 
@@ -179,7 +193,7 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
         const newDay = {
             num_dia: formData.dias_plan.length + 1,
             nombre_dia: `Día ${formData.dias_plan.length + 1}`,
-            detalle_ejercicios: []
+            bloques_ejercicio: []
         };
 
         setFormData(prev => ({
@@ -234,11 +248,94 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
         }));
     };
 
-    // Exercise management functions
-    const addExercise = (dayIndex) => {
+    // Block management functions
+    const addBlock = (dayIndex) => {
+        const newBlock = {
+            nombre_bloque: `Bloque ${formData.dias_plan[dayIndex].bloques_ejercicio.length + 1}`,
+            orden_bloque: formData.dias_plan[dayIndex].bloques_ejercicio.length + 1,
+            descripcion: '',
+            detalle_ejercicios: []
+        };
+
+        setFormData(prev => ({
+            ...prev,
+            dias_plan: prev.dias_plan.map((dia, index) =>
+                index === dayIndex ? {
+                    ...dia,
+                    bloques_ejercicio: [...dia.bloques_ejercicio, newBlock]
+                } : dia
+            )
+        }));
+
+        // Expand the new block
+        const newBlockIndex = formData.dias_plan[dayIndex].bloques_ejercicio.length;
+        setExpandedBlocks(prev => ({
+            ...prev,
+            [`${dayIndex}-${newBlockIndex}`]: true
+        }));
+    };
+
+    const removeBlock = (dayIndex, blockIndex) => {
+        setFormData(prev => ({
+            ...prev,
+            dias_plan: prev.dias_plan.map((dia, dIndex) =>
+                dIndex === dayIndex ? {
+                    ...dia,
+                    bloques_ejercicio: dia.bloques_ejercicio.filter((_, bIndex) => bIndex !== blockIndex)
+                        .map((bloque, bIndex) => ({
+                            ...bloque,
+                            orden_bloque: bIndex + 1,
+                            nombre_bloque: bloque.nombre_bloque.replace(/Bloque \d+/, `Bloque ${bIndex + 1}`)
+                        }))
+                } : dia
+            )
+        }));
+
+        // Update expanded blocks
+        const newExpandedBlocks = {};
+        Object.keys(expandedBlocks).forEach(key => {
+            const [dayIdx, blockIdx] = key.split('-').map(Number);
+            if (dayIdx === dayIndex) {
+                if (blockIdx < blockIndex) {
+                    newExpandedBlocks[`${dayIdx}-${blockIdx}`] = expandedBlocks[key];
+                } else if (blockIdx > blockIndex) {
+                    newExpandedBlocks[`${dayIdx}-${blockIdx - 1}`] = expandedBlocks[key];
+                }
+            } else {
+                newExpandedBlocks[key] = expandedBlocks[key];
+            }
+        });
+        setExpandedBlocks(newExpandedBlocks);
+    };
+
+    const updateBlock = (dayIndex, blockIndex, field, value) => {
+        setFormData(prev => ({
+            ...prev,
+            dias_plan: prev.dias_plan.map((dia, dIndex) =>
+                dIndex === dayIndex ? {
+                    ...dia,
+                    bloques_ejercicio: dia.bloques_ejercicio.map((bloque, bIndex) =>
+                        bIndex === blockIndex ? { ...bloque, [field]: value } : bloque
+                    )
+                } : dia
+            )
+        }));
+    };
+
+    const toggleBlock = (dayIndex, blockIndex) => {
+        const key = `${dayIndex}-${blockIndex}`;
+        setExpandedBlocks(prev => ({
+            ...prev,
+            [key]: !prev[key]
+        }));
+    };
+
+    // Exercise management functions (now within blocks)
+    const addExercise = (dayIndex, blockIndex) => {
+        const currentBlock = formData.dias_plan[dayIndex].bloques_ejercicio[blockIndex];
         const newExercise = {
             ejercicio_id: '',
-            orden: formData.dias_plan[dayIndex].detalle_ejercicios.length + 1,
+            orden: currentBlock.detalle_ejercicios.length + 1,
             series: '',
             repeticiones: '',
             peso: '',
@@ -247,42 +344,57 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
 
         setFormData(prev => ({
             ...prev,
-            dias_plan: prev.dias_plan.map((dia, index) =>
-                index === dayIndex ? {
+            dias_plan: prev.dias_plan.map((dia, dIndex) =>
+                dIndex === dayIndex ? {
                     ...dia,
-                    detalle_ejercicios: [...dia.detalle_ejercicios, newExercise]
+                    bloques_ejercicio: dia.bloques_ejercicio.map((bloque, bIndex) =>
+                        bIndex === blockIndex ? {
+                            ...bloque,
+                            detalle_ejercicios: [...bloque.detalle_ejercicios, newExercise]
+                        } : bloque
+                    )
                 } : dia
             )
         }));
     };
 
-    const removeExercise = (dayIndex, exerciseIndex) => {
-        setFormData(prev => ({
-            ...prev,
-            dias_plan: prev.dias_plan.map((dia, index) =>
-                index === dayIndex ? {
-                    ...dia,
-                    detalle_ejercicios: dia.detalle_ejercicios.filter((_, eIndex) => eIndex !== exerciseIndex)
-                        .map((ejercicio, eIndex) => ({
-                            ...ejercicio,
-                            orden: eIndex + 1
-                        }))
-                } : dia
-            )
-        }));
-    };
-
-    const updateExercise = (dayIndex, exerciseIndex, field, value) => {
+    const removeExercise = (dayIndex, blockIndex, exerciseIndex) => {
         setFormData(prev => ({
             ...prev,
             dias_plan: prev.dias_plan.map((dia, dIndex) =>
                 dIndex === dayIndex ? {
                     ...dia,
-                    detalle_ejercicios: dia.detalle_ejercicios.map((ejercicio, eIndex) =>
-                        eIndex === exerciseIndex ? {
-                            ...ejercicio,
-                            [field]: field === 'ejercicio_id' ? parseInt(value) : value
-                        } : ejercicio
+                    bloques_ejercicio: dia.bloques_ejercicio.map((bloque, bIndex) =>
+                        bIndex === blockIndex ? {
+                            ...bloque,
+                            detalle_ejercicios: bloque.detalle_ejercicios.filter((_, eIndex) => eIndex !== exerciseIndex)
+                                .map((ejercicio, eIndex) => ({
+                                    ...ejercicio,
+                                    orden: eIndex + 1
+                                }))
+                        } : bloque
+                    )
+                } : dia
+            )
+        }));
+    };
+
+    const updateExercise = (dayIndex, blockIndex, exerciseIndex, field, value) => {
+        setFormData(prev => ({
+            ...prev,
+            dias_plan: prev.dias_plan.map((dia, dIndex) =>
+                dIndex === dayIndex ? {
+                    ...dia,
+                    bloques_ejercicio: dia.bloques_ejercicio.map((bloque, bIndex) =>
+                        bIndex === blockIndex ? {
+                            ...bloque,
+                            detalle_ejercicios: bloque.detalle_ejercicios.map((ejercicio, eIndex) =>
+                                eIndex === exerciseIndex ? {
+                                    ...ejercicio,
+                                    [field]: field === 'ejercicio_id' ? parseInt(value) : value
+                                } : ejercicio
+                            )
+                        } : bloque
                     )
                 } : dia
             )
@@ -376,7 +488,9 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
                                         </div>
                                         <div className="col-md-6">
                                             <small className="text-muted">
-                                                {dia.detalle_ejercicios.length} ejercicio{dia.detalle_ejercicios.length !== 1 ? 's' : ''}
+                                                {dia.bloques_ejercicio.length} bloque{dia.bloques_ejercicio.length !== 1 ? 's' : ''}
+                                                {' • '}
+                                                {dia.bloques_ejercicio.reduce((total, bloque) => total + bloque.detalle_ejercicios.length, 0)} ejercicio{dia.bloques_ejercicio.reduce((total, bloque) => total + bloque.detalle_ejercicios.length, 0) !== 1 ? 's' : ''}
                                             </small>
                                         </div>
                                         <div className="col-md-2 text-end">
@@ -404,116 +518,198 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
                                 {expandedDays[dayIndex] && (
                                     <div className="card-body">
                                         <div className="d-flex justify-content-between align-items-center mb-3">
-                                            <h6 className="fw-semibold mb-0">Ejercicios</h6>
+                                            <h6 className="fw-semibold mb-0">Bloques de Ejercicios</h6>
                                             <button
                                                 type="button"
                                                 className="btn btn-outline-success btn-sm"
-                                                onClick={() => addExercise(dayIndex)}
+                                                onClick={() => addBlock(dayIndex)}
                                             >
-                                                <Plus className="w-4 h-4 me-1" />
-                                                Agregar Ejercicio
+                                                <Layers className="w-4 h-4 me-1" />
+                                                Agregar Bloque
                                             </button>
                                         </div>
 
-                                        {dia.detalle_ejercicios.length === 0 ? (
+                                        {dia.bloques_ejercicio.length === 0 ? (
                                             <div className="text-center py-4 bg-light rounded-3">
-                                                <Target className="w-6 h-6 text-muted mb-2" />
-                                                <p className="text-muted mb-2">No hay ejercicios en este día</p>
+                                                <Layers className="w-6 h-6 text-muted mb-2" />
+                                                <p className="text-muted mb-2">No hay bloques en este día</p>
                                                 <button
                                                     type="button"
                                                     className="btn btn-outline-success btn-sm"
-                                                    onClick={() => addExercise(dayIndex)}
+                                                    onClick={() => addBlock(dayIndex)}
                                                 >
-                                                    <Plus className="w-4 h-4 me-1" />
-                                                    Agregar Ejercicio
+                                                    <Layers className="w-4 h-4 me-1" />
+                                                    Agregar Bloque
                                                 </button>
                                             </div>
                                         ) : (
-                                            <div className="table-responsive">
-                                                <table className="table table-sm">
-                                                    <thead>
-                                                    <tr>
-                                                        <th width="5%">#</th>
-                                                        <th width="30%">Ejercicio</th>
-                                                        <th width="12%">Series</th>
-                                                        <th width="15%">Repeticiones</th>
-                                                        <th width="12%">Peso</th>
-                                                        <th width="12%">Pausa</th>
-                                                        <th width="8%">Acciones</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    {dia.detalle_ejercicios.map((ejercicio, exerciseIndex) => (
-                                                        <tr key={exerciseIndex}>
-                                                            <td>
-                                                                <span className="badge bg-primary">{ejercicio.orden}</span>
-                                                            </td>
-                                                            <td>
-                                                                <select
-                                                                    className="form-select form-select-sm"
-                                                                    value={ejercicio.ejercicio_id}
-                                                                    onChange={(e) => updateExercise(dayIndex, exerciseIndex, 'ejercicio_id', e.target.value)}
-                                                                    required
+                                            dia.bloques_ejercicio.map((bloque, blockIndex) => (
+                                                <div key={blockIndex} className="card mb-3 border-secondary">
+                                                    <div className="card-header bg-secondary-subtle">
+                                                        <div className="row align-items-center">
+                                                            <div className="col-md-3">
+                                                                <input
+                                                                    type="text"
+                                                                    className="form-control form-control-sm fw-semibold"
+                                                                    value={bloque.nombre_bloque}
+                                                                    onChange={(e) => updateBlock(dayIndex, blockIndex, 'nombre_bloque', e.target.value)}
+                                                                    placeholder="Nombre del bloque"
+                                                                />
+                                                            </div>
+                                                            <div className="col-md-3">
+                                                                <input
+                                                                    type="text"
+                                                                    className="form-control form-control-sm"
+                                                                    value={bloque.descripcion}
+                                                                    onChange={(e) => updateBlock(dayIndex, blockIndex, 'descripcion', e.target.value)}
+                                                                    placeholder="Descripción (opcional)"
+                                                                />
+                                                            </div>
+                                                            <div className="col-md-4">
+                                                                <small className="text-muted">
+                                                                    {bloque.detalle_ejercicios.length} ejercicio{bloque.detalle_ejercicios.length !== 1 ? 's' : ''}
+                                                                </small>
+                                                            </div>
+                                                            <div className="col-md-2 text-end">
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-outline-secondary btn-sm me-2"
+                                                                    onClick={() => toggleBlock(dayIndex, blockIndex)}
                                                                 >
-                                                                    <option value="">Seleccionar ejercicio</option>
-                                                                    {exercises.map(ex => (
-                                                                        <option key={ex.ejercicio_id} value={ex.ejercicio_id}>
-                                                                            {ex.nombre}
-                                                                        </option>
-                                                                    ))}
-                                                                </select>
-                                                            </td>
-                                                            <td>
-                                                                <input
-                                                                    type="text"
-                                                                    className="form-control form-control-sm"
-                                                                    value={ejercicio.series}
-                                                                    onChange={(e) => updateExercise(dayIndex, exerciseIndex, 'series', e.target.value)}
-                                                                    placeholder="3"
-                                                                />
-                                                            </td>
-                                                            <td>
-                                                                <input
-                                                                    type="text"
-                                                                    className="form-control form-control-sm"
-                                                                    value={ejercicio.repeticiones}
-                                                                    onChange={(e) => updateExercise(dayIndex, exerciseIndex, 'repeticiones', e.target.value)}
-                                                                    placeholder="8-10"
-                                                                />
-                                                            </td>
-                                                            <td>
-                                                                <input
-                                                                    type="text"
-                                                                    className="form-control form-control-sm"
-                                                                    value={ejercicio.peso}
-                                                                    onChange={(e) => updateExercise(dayIndex, exerciseIndex, 'peso', e.target.value)}
-                                                                    placeholder="20kg"
-                                                                />
-                                                            </td>
-                                                            <td>
-                                                                <input
-                                                                    type="text"
-                                                                    className="form-control form-control-sm"
-                                                                    value={ejercicio.pausa}
-                                                                    onChange={(e) => updateExercise(dayIndex, exerciseIndex, 'pausa', e.target.value)}
-                                                                    placeholder="2'"
-                                                                />
-                                                            </td>
-                                                            <td>
+                                                                    {expandedBlocks[`${dayIndex}-${blockIndex}`] ?
+                                                                        <ChevronUp className="w-4 h-4" /> :
+                                                                        <ChevronDown className="w-4 h-4" />
+                                                                    }
+                                                                </button>
                                                                 <button
                                                                     type="button"
                                                                     className="btn btn-outline-danger btn-sm"
-                                                                    onClick={() => removeExercise(dayIndex, exerciseIndex)}
-                                                                    title="Eliminar ejercicio"
+                                                                    onClick={() => removeBlock(dayIndex, blockIndex)}
                                                                 >
-                                                                    <Trash2 className="w-3 h-3" />
+                                                                    <Trash2 className="w-4 h-4" />
                                                                 </button>
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {expandedBlocks[`${dayIndex}-${blockIndex}`] && (
+                                                        <div className="card-body">
+                                                            <div className="d-flex justify-content-between align-items-center mb-3">
+                                                                <h6 className="fw-semibold mb-0 text-secondary">Ejercicios</h6>
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-outline-primary btn-sm"
+                                                                    onClick={() => addExercise(dayIndex, blockIndex)}
+                                                                >
+                                                                    <Plus className="w-4 h-4 me-1" />
+                                                                    Agregar Ejercicio
+                                                                </button>
+                                                            </div>
+
+                                                            {bloque.detalle_ejercicios.length === 0 ? (
+                                                                <div className="text-center py-3 bg-light rounded-3">
+                                                                    <Target className="w-5 h-5 text-muted mb-2" />
+                                                                    <p className="text-muted mb-2 small">No hay ejercicios en este bloque</p>
+                                                                    <button
+                                                                        type="button"
+                                                                        className="btn btn-outline-primary btn-sm"
+                                                                        onClick={() => addExercise(dayIndex, blockIndex)}
+                                                                    >
+                                                                        <Plus className="w-4 h-4 me-1" />
+                                                                        Agregar Ejercicio
+                                                                    </button>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="table-responsive">
+                                                                    <table className="table table-sm table-bordered">
+                                                                        <thead className="table-light">
+                                                                        <tr>
+                                                                            <th width="5%">#</th>
+                                                                            <th width="30%">Ejercicio</th>
+                                                                            <th width="12%">Series</th>
+                                                                            <th width="15%">Repeticiones</th>
+                                                                            <th width="12%">Peso</th>
+                                                                            <th width="12%">Pausa</th>
+                                                                            <th width="8%">Acciones</th>
+                                                                        </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        {bloque.detalle_ejercicios.map((ejercicio, exerciseIndex) => (
+                                                                            <tr key={exerciseIndex}>
+                                                                                <td>
+                                                                                    <span className="badge bg-secondary">{ejercicio.orden}</span>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <select
+                                                                                        className="form-select form-select-sm"
+                                                                                        value={ejercicio.ejercicio_id}
+                                                                                        onChange={(e) => updateExercise(dayIndex, blockIndex, exerciseIndex, 'ejercicio_id', e.target.value)}
+                                                                                        required
+                                                                                    >
+                                                                                        <option value="">Seleccionar ejercicio</option>
+                                                                                        {exercises.map(ex => (
+                                                                                            <option key={ex.ejercicio_id} value={ex.ejercicio_id}>
+                                                                                                {ex.nombre}
+                                                                                            </option>
+                                                                                        ))}
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        className="form-control form-control-sm"
+                                                                                        value={ejercicio.series}
+                                                                                        onChange={(e) => updateExercise(dayIndex, blockIndex, exerciseIndex, 'series', e.target.value)}
+                                                                                        placeholder="3"
+                                                                                    />
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        className="form-control form-control-sm"
+                                                                                        value={ejercicio.repeticiones}
+                                                                                        onChange={(e) => updateExercise(dayIndex, blockIndex, exerciseIndex, 'repeticiones', e.target.value)}
+                                                                                        placeholder="8-10"
+                                                                                    />
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        className="form-control form-control-sm"
+                                                                                        value={ejercicio.peso}
+                                                                                        onChange={(e) => updateExercise(dayIndex, blockIndex, exerciseIndex, 'peso', e.target.value)}
+                                                                                        placeholder="20kg"
+                                                                                    />
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        className="form-control form-control-sm"
+                                                                                        value={ejercicio.pausa}
+                                                                                        onChange={(e) => updateExercise(dayIndex, blockIndex, exerciseIndex, 'pausa', e.target.value)}
+                                                                                        placeholder="2'"
+                                                                                    />
+                                                                                </td>
+                                                                                <td>
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        className="btn btn-outline-danger btn-sm"
+                                                                                        onClick={() => removeExercise(dayIndex, blockIndex, exerciseIndex)}
+                                                                                        title="Eliminar ejercicio"
+                                                                                    >
+                                                                                        <Trash2 className="w-3 h-3" />
+                                                                                    </button>
+                                                                                </td>
+                                                                            </tr>
+                                                                        ))}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ))
                                         )}
                                     </div>
                                 )}

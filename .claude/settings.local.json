@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(/C:\\Users\\Santino\\Desktop\\Eliseo-Cumple\\frontend\\src\\pages/**)",
+      "Read(/C:\\Users\\Santino\\Desktop\\Eliseo-Cumple\\frontend\\src\\pages/**)",
+      "Read(/C:\\Users\\Santino\\Desktop\\Eliseo-Cumple\\frontend\\src\\services/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

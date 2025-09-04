@@ -1,5 +1,4 @@
 
-
 class HomeBarOptionsService {
     optionsHomeBar = [
         {
@@ -7,12 +6,6 @@ class HomeBarOptionsService {
             "name": "Inicio",
             "roles": ["alumno","superAdmin", "profesor"],
             "path": "/home"
-        },
-        {
-            "icon": "clipboard-list",
-            "name": "Lista Planes",
-            "roles": ["profesor","superAdmin"],
-            "path": "/planes"
         },
         {
             "icon": "people-fill",
@@ -24,7 +17,7 @@ class HomeBarOptionsService {
             "icon": "user-plus",
             "name": "Alumnos",
             "roles": ["profesor"],
-            "path": "/alumnos"
+            "path": "/users"
         },
         {
             "icon": "tags",

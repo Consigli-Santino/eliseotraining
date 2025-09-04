@@ -128,14 +128,19 @@ const PlanesCrud = () => {
                 dias_plan: plan.dias_plan.map(dia => ({
                     num_dia: dia.num_dia,
                     nombre_dia: dia.nombre_dia,
-                    detalle_ejercicios: dia.detalle_ejercicios.map(detalle => ({
-                        ejercicio_id: detalle.ejercicio_id,
-                        orden: detalle.orden,
-                        series: detalle.series,
-                        repeticiones: detalle.repeticiones,
-                        peso: detalle.peso,
-                        pausa: detalle.pausa
-                    }))
+                    bloques_ejercicio: dia.bloques_ejercicio?.map(bloque => ({
+                        nombre_bloque: bloque.nombre_bloque,
+                        orden_bloque: bloque.orden_bloque,
+                        descripcion: bloque.descripcion,
+                        detalle_ejercicios: bloque.detalle_ejercicios?.map(detalle => ({
+                            ejercicio_id: detalle.ejercicio_id,
+                            orden: detalle.orden,
+                            series: detalle.series,
+                            repeticiones: detalle.repeticiones,
+                            peso: detalle.peso,
+                            pausa: detalle.pausa
+                        })) || []
+                    })) || []
                 }))
             };
 
@@ -539,38 +544,62 @@ const PlanesCrud = () => {
                                             </h6>
                                         </div>
                                         <div className="card-body">
-                                            {dia.detalle_ejercicios?.length > 0 ? (
-                                                <div className="table-responsive">
-                                                    <table className="table table-sm">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>Orden</th>
-                                                            <th>Ejercicio</th>
-                                                            <th>Series</th>
-                                                            <th>Reps</th>
-                                                            <th>Peso</th>
-                                                            <th>Pausa</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        {dia.detalle_ejercicios.map((detalle, detalleIndex) => (
-                                                            <tr key={detalle.detalle_id}>
-                                                                <td>{detalle.orden}</td>
-                                                                <td>
-                                                                    <div className="d-flex align-items-center">
-                                                                        <Target className="w-4 h-4 text-primary me-2" />
-                                                                        {detalle.ejercicio?.nombre}
+                                            {dia.bloques_ejercicio?.some(bloque => bloque.detalle_ejercicios?.length > 0) ? (
+                                                dia.bloques_ejercicio
+                                                    .sort((a, b) => a.orden_bloque - b.orden_bloque)
+                                                    .map((bloque, bloqueIndex) => (
+                                                        <div key={bloque.bloque_id} className="mb-4">
+                                                            {/* Block Header */}
+                                                            <div className="bg-light rounded p-2 mb-2">
+                                                                <div className="d-flex align-items-center">
+                                                                    <div className="bg-primary-red rounded-2 p-1 me-2">
+                                                                        <Target className="w-3 h-3 text-white" />
                                                                     </div>
-                                                                </td>
-                                                                <td>{detalle.series || '-'}</td>
-                                                                <td>{detalle.repeticiones || '-'}</td>
-                                                                <td>{detalle.peso || '-'}</td>
-                                                                <td>{detalle.pausa || '-'}</td>
-                                                            </tr>
-                                                        ))}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                                                    <h6 className="fw-bold mb-0 me-2">{bloque.nombre_bloque}</h6>
+                                                                    {bloque.descripcion && (
+                                                                        <small className="text-muted">• {bloque.descripcion}</small>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            {/* Block Exercises Table */}
+                                                            {bloque.detalle_ejercicios?.length > 0 && (
+                                                                <div className="table-responsive">
+                                                                    <table className="table table-sm">
+                                                                        <thead>
+                                                                        <tr>
+                                                                            <th>Orden</th>
+                                                                            <th>Ejercicio</th>
+                                                                            <th>Series</th>
+                                                                            <th>Reps</th>
+                                                                            <th>Peso</th>
+                                                                            <th>Pausa</th>
+                                                                        </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        {bloque.detalle_ejercicios
+                                                                            .sort((a, b) => a.orden - b.orden)
+                                                                            .map((detalle, detalleIndex) => (
+                                                                            <tr key={detalle.detalle_id}>
+                                                                                <td>{detalle.orden}</td>
+                                                                                <td>
+                                                                                    <div className="d-flex align-items-center">
+                                                                                        <Target className="w-4 h-4 text-primary me-2" />
+                                                                                        {detalle.ejercicio?.nombre}
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td>{detalle.series || '-'}</td>
+                                                                                <td>{detalle.repeticiones || '-'}</td>
+                                                                                <td>{detalle.peso || '-'}</td>
+                                                                                <td>{detalle.pausa || '-'}</td>
+                                                                            </tr>
+                                                                        ))}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    ))
                                             ) : (
                                                 <p className="text-muted text-center py-3">
                                                     No hay ejercicios para este día

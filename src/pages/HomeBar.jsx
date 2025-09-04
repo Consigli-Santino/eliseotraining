@@ -4,8 +4,12 @@ import {
     Home,
     Calendar,
     ClipboardList,
+    ClipboardCheck,
     Users,
     UserCheck,
+    UserPlus,
+    Tag,
+    Dumbbell,
     Menu,
     X,
     LogOut
@@ -22,8 +26,12 @@ const HomeBar = ({ userOptions = [] }) => {
         'house-fill': Home,
         'calendar-check': Calendar,
         'clipboard-list': ClipboardList,
+        'clipboard-check': ClipboardCheck,
         'people-fill': Users,
-        'person-badge': UserCheck
+        'person-badge': UserCheck,
+        'user-plus': UserPlus,
+        'tags': Tag,
+        'dumbbell': Dumbbell
     };
 
     const getIconComponent = (iconName) => {

@@ -23,7 +23,7 @@ const Login = () => {
     });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-
+    const API_BASE = import.meta.env.VITE_BACKEND;
     // Usar el contexto de autenticación
     const { login } = useAuth();
 
@@ -79,8 +79,8 @@ const Login = () => {
         }
 
         try {
-            // Llamada a la API en localhost:7000
-            const response = await fetch(' https://68787216e3d5.ngrok-free.app/usuarios/login', {
+
+            const response = await fetch(`${API_BASE}/usuarios/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -100,9 +100,7 @@ const Login = () => {
                 // Usar el método login del contexto
                 login(data.access_token);
 
-                // Mostrar mensaje de éxito
-                const decodedToken = decodeJWT(data.access_token);
-                alert(`¡Bienvenido ${decodedToken?.user_data?.nombre || 'Usuario'}!`);
+                // Login exitoso - redirigir sin alert
 
                 // Redirigir a /home
                 window.location.href = '/home';
