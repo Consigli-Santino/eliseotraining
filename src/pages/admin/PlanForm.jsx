@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Select from 'react-select';
 import {
     Save,
     Plus,
@@ -17,6 +18,7 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
     // States
     const [users, setUsers] = useState([]);
     const [exercises, setExercises] = useState([]);
+    const [exerciseOptions, setExerciseOptions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -24,6 +26,7 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
     const [formData, setFormData] = useState({
         usuario_id: '',
         nombre_plan: '',
+        comentario_plan: '',
         dias_plan: []
     });
 
@@ -54,10 +57,12 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
             setFormData({
                 usuario_id: plan.usuario_id,
                 nombre_plan: plan.nombre_plan,
+                comentario_plan: plan.comentario_plan || '',
                 dias_plan: plan.dias_plan?.map(dia => ({
                     dia_plan_id: dia.dia_plan_id,
                     num_dia: dia.num_dia,
                     nombre_dia: dia.nombre_dia,
+                    comentario_dia: dia.comentario_dia || '',
                     bloques_ejercicio: dia.bloques_ejercicio?.map(bloque => ({
                         bloque_id: bloque.bloque_id,
                         nombre_bloque: bloque.nombre_bloque,
@@ -70,7 +75,8 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
                             series: detalle.series || '',
                             repeticiones: detalle.repeticiones || '',
                             peso: detalle.peso || '',
-                            pausa: detalle.pausa || ''
+                            pausa: detalle.pausa || '',
+                            comentario_ejercicio: detalle.comentario_ejercicio || ''
                         })) || []
                     })) || []
                 })) || []
@@ -92,12 +98,34 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
             setFormData({
                 usuario_id: '',
                 nombre_plan: '',
+                comentario_plan: '',
                 dias_plan: []
             });
             setExpandedDays({});
             setExpandedBlocks({});
         }
     }, [plan, isEditing]);
+
+    // Format exercises for react-select with categories
+    const formatExerciseOptions = (exercisesList) => {
+        const grouped = exercisesList.reduce((acc, exercise) => {
+            const categoryName = exercise.categoria?.nombre || 'Sin Categoría';
+            if (!acc[categoryName]) {
+                acc[categoryName] = [];
+            }
+            acc[categoryName].push({
+                value: exercise.ejercicio_id,
+                label: exercise.nombre,
+                category: categoryName
+            });
+            return acc;
+        }, {});
+
+        return Object.keys(grouped).map(category => ({
+            label: category,
+            options: grouped[category]
+        }));
+    };
 
     // Load users from API
     const loadUsers = async () => {
@@ -126,6 +154,7 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
 
             const data = await response.json();
             setExercises(data);
+            setExerciseOptions(formatExerciseOptions(data));
         } catch (err) {
             console.error('Error loading exercises:', err);
         }
@@ -193,6 +222,7 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
         const newDay = {
             num_dia: formData.dias_plan.length + 1,
             nombre_dia: `Día ${formData.dias_plan.length + 1}`,
+            comentario_dia: '',
             bloques_ejercicio: []
         };
 
@@ -339,7 +369,8 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
             series: '',
             repeticiones: '',
             peso: '',
-            pausa: ''
+            pausa: '',
+            comentario_ejercicio: ''
         };
 
         setFormData(prev => ({
@@ -445,6 +476,20 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
                     </div>
                 </div>
 
+                <div className="row g-3 mb-4">
+                    <div className="col-12">
+                        <label className="form-label fw-semibold">Comentario General del Plan</label>
+                        <textarea
+                            name="comentario_plan"
+                            className="form-control"
+                            rows="3"
+                            value={formData.comentario_plan}
+                            onChange={handleInputChange}
+                            placeholder="Descripción general del plan, objetivos, consideraciones especiales... (opcional)"
+                        />
+                    </div>
+                </div>
+
                 {/* Days Section */}
                 <div className="mb-4">
                     <div className="d-flex justify-content-between align-items-center mb-3">
@@ -511,6 +556,17 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
                                             >
                                                 <Trash2 className="w-4 h-4" />
                                             </button>
+                                        </div>
+                                    </div>
+                                    <div className="row mt-2">
+                                        <div className="col-12">
+                                            <textarea
+                                                className="form-control form-control-sm"
+                                                rows="2"
+                                                value={dia.comentario_dia}
+                                                onChange={(e) => updateDay(dayIndex, 'comentario_dia', e.target.value)}
+                                                placeholder="Comentario del día (opcional): enfoque, intensidad, consideraciones..."
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -624,13 +680,14 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
                                                                     <table className="table table-sm table-bordered">
                                                                         <thead className="table-light">
                                                                         <tr>
-                                                                            <th width="5%">#</th>
-                                                                            <th width="30%">Ejercicio</th>
-                                                                            <th width="12%">Series</th>
-                                                                            <th width="15%">Repeticiones</th>
-                                                                            <th width="12%">Peso</th>
-                                                                            <th width="12%">Pausa</th>
-                                                                            <th width="8%">Acciones</th>
+                                                                            <th width="4%">#</th>
+                                                                            <th width="20%">Ejercicio</th>
+                                                                            <th width="8%">Series</th>
+                                                                            <th width="10%">Reps</th>
+                                                                            <th width="8%">Peso</th>
+                                                                            <th width="8%">Pausa</th>
+                                                                            <th width="35%">Comentario</th>
+                                                                            <th width="7%">Acciones</th>
                                                                         </tr>
                                                                         </thead>
                                                                         <tbody>
@@ -640,19 +697,36 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
                                                                                     <span className="badge bg-secondary">{ejercicio.orden}</span>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <select
-                                                                                        className="form-select form-select-sm"
-                                                                                        value={ejercicio.ejercicio_id}
-                                                                                        onChange={(e) => updateExercise(dayIndex, blockIndex, exerciseIndex, 'ejercicio_id', e.target.value)}
-                                                                                        required
-                                                                                    >
-                                                                                        <option value="">Seleccionar ejercicio</option>
-                                                                                        {exercises.map(ex => (
-                                                                                            <option key={ex.ejercicio_id} value={ex.ejercicio_id}>
-                                                                                                {ex.nombre}
-                                                                                            </option>
-                                                                                        ))}
-                                                                                    </select>
+                                                                                    <Select
+                                                                                        options={exerciseOptions}
+                                                                                        value={exerciseOptions.flatMap(group => group.options).find(option => option.value === ejercicio.ejercicio_id) || null}
+                                                                                        onChange={(selectedOption) => updateExercise(dayIndex, blockIndex, exerciseIndex, 'ejercicio_id', selectedOption?.value || '')}
+                                                                                        placeholder="Buscar ejercicio..."
+                                                                                        isSearchable={true}
+                                                                                        menuPortalTarget={document.body}
+                                                                                        className="react-select-container"
+                                                                                        classNamePrefix="react-select"
+                                                                                        styles={{
+                                                                                            control: (provided) => ({
+                                                                                                ...provided,
+                                                                                                minHeight: '31px',
+                                                                                                height: '31px'
+                                                                                            }),
+                                                                                            valueContainer: (provided) => ({
+                                                                                                ...provided,
+                                                                                                height: '31px',
+                                                                                                padding: '0 6px'
+                                                                                            }),
+                                                                                            input: (provided) => ({
+                                                                                                ...provided,
+                                                                                                margin: '0px'
+                                                                                            }),
+                                                                                            menuPortal: (provided) => ({
+                                                                                                ...provided,
+                                                                                                zIndex: 9999
+                                                                                            })
+                                                                                        }}
+                                                                                    />
                                                                                 </td>
                                                                                 <td>
                                                                                     <input
@@ -688,6 +762,15 @@ const PlanForm = ({ plan, isEditing, onSave, onCancel }) => {
                                                                                         value={ejercicio.pausa}
                                                                                         onChange={(e) => updateExercise(dayIndex, blockIndex, exerciseIndex, 'pausa', e.target.value)}
                                                                                         placeholder="2'"
+                                                                                    />
+                                                                                </td>
+                                                                                <td>
+                                                                                    <textarea
+                                                                                        className="form-control form-control-sm"
+                                                                                        rows="1"
+                                                                                        value={ejercicio.comentario_ejercicio}
+                                                                                        onChange={(e) => updateExercise(dayIndex, blockIndex, exerciseIndex, 'comentario_ejercicio', e.target.value)}
+                                                                                        placeholder="Técnica, consejos..."
                                                                                     />
                                                                                 </td>
                                                                                 <td>

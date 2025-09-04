@@ -13,7 +13,8 @@ import {
     ChevronRight,
     ChevronDown,
     ChevronUp,
-    Play
+    Play,
+    MessageSquare
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import '../../styles/styles.css';
@@ -152,11 +153,17 @@ const PlanViewer = () => {
                         <div className="col-8">
                             <h1 className="h4 fw-bold text-white mb-1">
                                 <Calendar className="w-5 h-5 me-2 text-danger" />
-                                Mi Plan
+                                {plan.nombre_plan}
                             </h1>
                             <p className="text-white-50 mb-0 small">
                                 Por Eliseo Lariguet
                             </p>
+                            {plan.comentario_plan && (
+                                <div className="text-white-50 mb-0 small mt-2 bg-dark bg-opacity-25 p-2 rounded">
+                                    <MessageSquare className="w-3 h-3 me-1" />
+                                    {plan.comentario_plan}
+                                </div>
+                            )}
                         </div>
                         <div className="col-4 text-end">
                             <a
@@ -206,9 +213,12 @@ const PlanViewer = () => {
                                         <small className="text-muted">
                                             {plan.dias_plan[selectedDay].bloques_ejercicio?.reduce((total, bloque) => total + (bloque.detalle_ejercicios?.length || 0), 0) || 0} ejercicios
                                         </small>
-                                    </div>
-                                    <div className="bg-primary-red rounded-3 p-2">
-                                        <Target className="w-4 h-4 text-white" />
+                                        {plan.dias_plan[selectedDay].comentario_dia && (
+                                            <div className="small text-info mt-2 bg-info bg-opacity-10 p-1 rounded d-flex align-items-start">
+                                                <MessageSquare className="w-3 h-3 me-1 flex-shrink-0 mt-1" />
+                                                <span>{plan.dias_plan[selectedDay].comentario_dia}</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -272,6 +282,14 @@ const PlanViewer = () => {
                                                             <div className="small text-muted mb-2">
                                                                 {detalle.ejercicio?.categoria?.nombre}
                                                             </div>
+
+                                                            {/* Comentario del ejercicio */}
+                                                            {detalle.comentario_ejercicio && (
+                                                                <div className="small text-primary mb-2 bg-primary bg-opacity-10 p-1 rounded d-flex align-items-start">
+                                                                    <MessageSquare className="w-3 h-3 me-1 flex-shrink-0 mt-1" />
+                                                                    <span>{detalle.comentario_ejercicio}</span>
+                                                                </div>
+                                                            )}
 
                                                             {/* Compact info grid */}
                                                             <div className="row g-1 planviewer-info-grid">

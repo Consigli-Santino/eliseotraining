@@ -3,7 +3,10 @@
     "allow": [
       "Read(/C:\\Users\\Santino\\Desktop\\Eliseo-Cumple\\frontend\\src\\pages/**)",
       "Read(/C:\\Users\\Santino\\Desktop\\Eliseo-Cumple\\frontend\\src\\pages/**)",
-      "Read(/C:\\Users\\Santino\\Desktop\\Eliseo-Cumple\\frontend\\src\\services/**)"
+      "Read(/C:\\Users\\Santino\\Desktop\\Eliseo-Cumple\\frontend\\src\\services/**)",
+      "Read(/C:\\Users\\Santino\\Desktop\\Eliseo-Cumple\\backend/**)",
+      "Read(/C:\\Users\\Santino\\Desktop\\Eliseo-Cumple\\backend\\models/**)",
+      "Read(/C:\\Users\\Santino\\Desktop\\Eliseo-Cumple\\backend\\services/**)"
     ],
     "deny": [],
     "ask": []
