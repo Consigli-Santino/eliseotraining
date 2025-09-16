@@ -1,0 +1,523 @@
+/* ================================================
+   HOME COMPONENT - REAL FIGHTING SPRITES ANIMATION
+   Using actual sprite sheet images like real fighting games
+   ================================================ */
+
+/* Combat Arena with Floor */
+.karate-animation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+    background: 
+        linear-gradient(0deg, rgba(139, 139, 139, 0.12) 0%, rgba(139, 139, 139, 0.06) 20%, transparent 40%),
+        radial-gradient(ellipse at 50% 85%, rgba(0, 0, 0, 0.08) 0%, transparent 60%);
+}
+
+/* Real Fighting Sprite Base - Using actual pixel art */
+.fighting-sprite {
+    position: absolute;
+    bottom: 25%;
+    width: 50px;
+    height: 50px;
+    opacity: 0.4;
+    transform-origin: center bottom;
+    will-change: background-position, transform;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    background-repeat: no-repeat;
+}
+
+/* Fighter 1 - Real Sprite Animation */
+.fighting-sprite-1 {
+    left: 25%;
+    animation: 
+        realFightingSprite1 2s steps(8) infinite,
+        realMovement1 8s ease-in-out infinite;
+}
+
+/* Fighter 2 - Defensive Sprite Animation */  
+.fighting-sprite-2 {
+    right: 25%;
+    transform: scaleX(-1);
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjY0IiB2aWV3Qm94PSIwIDAgNTEyIDY0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8IS0tIERlZmVuc2l2ZSBGcmFtZXMgLS0+CjxnIGlkPSJkZnJhbWUxIj4KPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSJyZ2JhKDE4NSwgMjgsIDI4LCAwLjEpIi8+CjxjaXJjbGUgY3g9IjMyIiBjeT0iMTYiIHI9IjgiIGZpbGw9IiNCOTFDMUMiLz4KPHJlY3QgeD0iMjYiIHk9IjI0IiB3aWR0aD0iMTIiIGhlaWdodD0iMjAiIHJ4PSIyIiBmaWxsPSIjQjkxQzFDIi8+CjxyZWN0IHg9IjIyIiB5PSIyOCIgd2lkdGg9IjgiIGhlaWdodD0iNSIgcng9IjEuNSIgZmlsbD0iI0I5MUMxQyIvPgo8cmVjdCB4PSIzNCIgeT0iMjgiIHdpZHRoPSI4IiBoZWlnaHQ9IjUiIHJ4PSIxLjUiIGZpbGw9IiNCOTFDMUMiLz4KPHJlY3QgeD0iMjgiIHk9IjQ0IiB3aWR0aD0iNCIgaGVpZ2h0PSIxNiIgcng9IjIiIGZpbGw9IiNCOTFDMUMiLz4KPHJlY3QgeD0iMzQiIHk9IjQ0IiB3aWR0aD0iNCIgaGVpZ2h0PSIxNiIgcng9IjIiIGZpbGw9IiNCOTFDMUMiLz4KPC9nPgo8ZyBpZD0iZGZyYW1lMiI+CjxyZWN0IHg9IjY0IiB5PSIwIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9InJnYmEoMTg1LCAyOCwgMjgsIDAuMSkiLz4KPGNpcmNsZSBjeD0iOTYiIGN5PSIxNCIgcj0iOCIgZmlsbD0iI0I5MUMxQyIvPgo8cmVjdCB4PSI5MCIgeT0iMjIiIHdpZHRoPSIxMiIgaGVpZ2h0PSIyMCIgcng9IjIiIGZpbGw9IiNCOTFDMUMiLz4KPHJlY3QgeD0iODQiIHk9IjIyIiB3aWR0aD0iMTAiIGhlaWdodD0iOCIgcng9IjEuNSIgZmlsbD0iI0I5MUMxQyIvPgo8cmVjdCB4PSIxMDAiIHk9IjI4IiB3aWR0aD0iOCIgaGVpZ2h0PSIzIiByeD0iMS41IiBmaWxsPSIjQjkxQzFDIi8+CjxyZWN0IHg9IjkyIiB5PSI0MiIgd2lkdGg9IjQiIGhlaWdodD0iMTgiIHJ4PSIyIiBmaWxsPSIjQjkxQzFDIi8+CjxyZWN0IHg9Ijk4IiB5PSI0MiIgd2lkdGg9IjQiIGhlaWdodD0iMTgiIHJ4PSIyIiBmaWxsPSIjQjkxQzFDIi8+CjwvZz4KPGcgaWQ9ImRmcmFtZTMiPgo8cmVjdCB4PSIxMjgiIHk9IjAiIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0icmdiYSgxODUsIDI4LCAyOCwgMC4xKSIvPgo8Y2lyY2xlIGN4PSIxNjAiIGN5PSIyMCIgcj0iOCIgZmlsbD0iI0I5MUMxQyIvPgo8cmVjdCB4PSIxNTQiIHk9IjI4IiB3aWR0aD0iMTIiIGhlaWdodD0iMTgiIHJ4PSIyIiBmaWxsPSIjQjkxQzFDIi8+CjxyZWN0IHg9IjE0NiIgeT0iMzIiIHdpZHRoPSI4IiBoZWlnaHQ9IjMiIHJ4PSIxLjUiIGZpbGw9IiNCOTFDMUMiLz4KPHJlY3QgeD0iMTY2IiB5PSIzMiIgd2lkdGg9IjgiIGhlaWdodD0iMyIgcng9IjEuNSIgZmlsbD0iI0I5MUMxQyIvPgo8cmVjdCB4PSIxNTYiIHk9IjQ2IiB3aWR0aD0iNCIgaGVpZ2h0PSIxNCIgcng9IjIiIGZpbGw9IiNCOTFDMUMiLz4KPHJlY3QgeD0iMTYyIiB5PSI0NiIgd2lkdGg9IjQiIGhlaWdodD0iMTQiIHJ4PSIyIiBmaWxsPSIjQjkxQzFDIi8+CjwvZz4KPGcgaWQ9ImRmcmFtZTQiPgo8cmVjdCB4PSIxOTIiIHk9IjAiIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0icmdiYSgxODUsIDI4LCAyOCwgMC4xKSIvPgo8Y2lyY2xlIGN4PSIyMjQiIGN5PSIxNiIgcj0iOCIgZmlsbD0iI0I5MUMxQyIvPgo8cmVjdCB4PSIyMTgiIHk9IjI0IiB3aWR0aD0iMTIiIGhlaWdodD0iMjAiIHJ4PSIyIiBmaWxsPSIjQjkxQzFDIi8+CjxyZWN0IHg9IjIwOCIgeT0iMjgiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0IiByeD0iMS41IiBmaWxsPSIjQjkxQzFDIi8+CjxyZWN0IHg9IjIzMCIgeT0iMzAiIHdpZHRoPSI4IiBoZWlnaHQ9IjMiIHJ4PSIxLjUiIGZpbGw9IiNCOTFDMUMiLz4KPHJlY3QgeD0iMjIwIiB5PSI0NCIgd2lkdGg9IjQiIGhlaWdodD0iMTYiIHJ4PSIyIiBmaWxsPSIjQjkxQzFDIi8+CjxyZWN0IHg9IjIyNiIgeT0iNDQiIHdpZHRoPSI0IiBoZWlnaHQ9IjE2IiByeD0iMiIgZmlsbD0iI0I5MUMxQyIvPgo8L2c+CjxnIGlkPSJkZnJhbWU1Ij4KPHJlY3QgeD0iMjU2IiB5PSIwIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9InJnYmEoMTg1LCAyOCwgMjgsIDAuMSkiLz4KPGNpcmNsZSBjeD0iMjg4IiBjeT0iMTIiIHI9IjgiIGZpbGw9IiNCOTFDMUMiLz4KPHJlY3QgeD0iMjgyIiB5PSIyMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjIwIiByeD0iMiIgZmlsbD0iI0I5MUMxQyIvPgo8cmVjdCB4PSIyNzQiIHk9IjI2IiB3aWR0aD0iOCIgaGVpZ2h0PSIzIiByeD0iMS41IiBmaWxsPSIjQjkxQzFDIi8+CjxyZWN0IHg9IjI5NCIgeT0iMjYiIHdpZHRoPSI4IiBoZWlnaHQ9IjMiIHJ4PSIxLjUiIGZpbGw9IiNCOTFDMUMiLz4KPHJlY3QgeD0iMjg0IiB5PSI0MCIgd2lkdGg9IjQiIGhlaWdodD0iMTgiIHJ4PSIyIiBmaWxsPSIjQjkxQzFDIi8+CjxyZWN0IHg9IjI4NCIgeT0iMzAiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0IiByeD0iMiIgZmlsbD0iI0I5MUMxQyIvPgo8L2c+CjxnIGlkPSJkZnJhbWU2Ij4KPHJlY3QgeD0iMzIwIiB5PSIwIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9InJnYmEoMTg1LCAyOCwgMjgsIDAuMSkiLz4KPGNpcmNsZSBjeD0iMzUyIiBjeT0iMTQiIHI9IjgiIGZpbGw9IiNCOTFDMUMiLz4KPHJlY3QgeD0iMzQ2IiB5PSIyMiIgd2lkdGg9IjEyIiBoZWlnaHQ9IjIwIiByeD0iMiIgZmlsbD0iI0I5MUMxQyIvPgo8cmVjdCB4PSIzMzYiIHk9IjI2IiB3aWR0aD0iMTIiIGhlaWdodD0iNCIgcng9IjEuNSIgZmlsbD0iI0I5MUMxQyIvPgo8cmVjdCB4PSIzNTgiIHk9IjI4IiB3aWR0aD0iOCIgaGVpZ2h0PSIzIiByeD0iMS41IiBmaWxsPSIjQjkxQzFDIi8+CjxyZWN0IHg9IjM0OCIgeT0iNDIiIHdpZHRoPSI0IiBoZWlnaHQ9IjE4IiByeD0iMiIgZmlsbD0iI0I5MUMxQyIvPgo8cmVjdCB4PSIzNTQiIHk9IjQyIiB3aWR0aD0iNCIgaGVpZ2h0PSIxOCIgcng9IjIiIGZpbGw9IiNCOTFDMUMiLz4KPC9nPgo8ZyBpZD0iZGZyYW1lNyI+CjxyZWN0IHg9IjM4NCIgeT0iMCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSJyZ2JhKDE4NSwgMjgsIDI4LCAwLjEpIi8+CjxjaXJjbGUgY3g9IjQxNiIgY3k9IjE2IiByPSI4IiBmaWxsPSIjQjkxQzFDIi8+CjxyZWN0IHg9IjQxMCIgeT0iMjQiIHdpZHRoPSIxMiIgaGVpZ2h0PSIyMCIgcng9IjIiIGZpbGw9IiNCOTFDMUMiLz4KPHJlY3QgeD0iNDAyIiB5PSIzMCIgd2lkdGg9IjgiIGhlaWdodD0iMyIgcng9IjEuNSIgZmlsbD0iI0I5MUMxQyIvPgo8cmVjdCB4PSI0MjIiIHk9IjMwIiB3aWR0aD0iOCIgaGVpZ2h0PSIzIiByeD0iMS41IiBmaWxsPSIjQjkxQzFDIi8+CjxyZWN0IHg9IjQxMiIgeT0iNDQiIHdpZHRoPSI0IiBoZWlnaHQ9IjE2IiByeD0iMiIgZmlsbD0iI0I5MUMxQyIvPgo8cmVjdCB4PSI0MTgiIHk9IjQ0IiB3aWR0aD0iNCIgaGVpZ2h0PSIxNiIgcng9IjIiIGZpbGw9IiNCOTFDMUMiLz4KPC9nPgo8ZyBpZD0iZGZyYW1lOCI+CjxyZWN0IHg9IjQ0OCIgeT0iMCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSJyZ2JhKDE4NSwgMjgsIDI4LCAwLjEpIi8+CjxjaXJjbGUgY3g9IjQ4MCIgY3k9IjE2IiByPSI4IiBmaWxsPSIjQjkxQzFDIi8+CjxyZWN0IHg9IjQ3NCIgeT0iMjQiIHdpZHRoPSIxMiIgaGVpZ2h0PSIyMCIgcng9IjIiIGZpbGw9IiNCOTFDMUMiLz4KPHJlY3QgeD0iNDY2IiB5PSIzMCIgd2lkdGg9IjgiIGhlaWdodD0iMyIgcng9IjEuNSIgZmlsbD0iI0I5MUMxQyIvPgo8cmVjdCB4PSI0ODYiIHk9IjMwIiB3aWR0aD0iOCIgaGVpZ2h0PSIzIiByeD0iMS41IiBmaWxsPSIjQjkxQzFDIi8+CjxyZWN0IHg9IjQ3NiIgeT0iNDQiIHdpZHRoPSI0IiBoZWlnaHQ9IjE2IiByeD0iMiIgZmlsbD0iI0I5MUMxQyIvPgo8cmVjdCB4PSI0ODIiIHk9IjQ0IiB3aWR0aD0iNCIgaGVpZ2h0PSIxNiIgcng9IjIiIGZpbGw9IiNCOTFDMUMiLz4KPC9nPgo8L3N2Zz4K');
+    animation: 
+        realFightingSprite2 2s steps(8) infinite,
+        realMovement2 8s ease-in-out infinite;
+    animation-delay: -1s, -2s;
+}
+
+/* REAL SPRITE SHEET ANIMATIONS */
+
+/* Fighter 1 Sprite Sequence - Attack Pattern */
+@keyframes realFightingSprite1 {
+    0% { background-position: 0px 0; }
+    12.5% { background-position: -64px 0; }
+    25% { background-position: -128px 0; }
+    37.5% { background-position: -192px 0; }
+    50% { background-position: -256px 0; }
+    62.5% { background-position: -320px 0; }
+    75% { background-position: -384px 0; }
+    87.5% { background-position: -448px 0; }
+    100% { background-position: 0px 0; }
+}
+
+/* Fighter 1 Combat Movement */
+@keyframes realMovement1 {
+    0%, 100% { 
+        transform: translateX(0) translateY(0) scaleX(1) scaleY(1);
+        opacity: 0.3;
+    }
+    
+    25% { 
+        transform: translateX(30px) translateY(-3px) scaleX(1.05) scaleY(0.95);
+        opacity: 0.4;
+    }
+    
+    62.5% { 
+        transform: translateX(50px) translateY(-20px) scaleX(0.95) scaleY(1.1);
+        opacity: 0.45;
+    }
+    
+    75% { 
+        transform: translateX(40px) translateY(3px) scaleX(1.1) scaleY(0.85);
+        opacity: 0.4;
+    }
+}
+
+/* Fighter 2 Sprite Sequence - Defensive Pattern */
+@keyframes realFightingSprite2 {
+    0% { background-position: 0px 0; }
+    12.5% { background-position: -64px 0; }
+    25% { background-position: -128px 0; }
+    37.5% { background-position: -192px 0; }
+    50% { background-position: -256px 0; }
+    62.5% { background-position: -320px 0; }
+    75% { background-position: -384px 0; }
+    87.5% { background-position: -448px 0; }
+    100% { background-position: 0px 0; }
+}
+
+/* Fighter 2 Combat Movement - Defensive */
+@keyframes realMovement2 {
+    0%, 100% { 
+        transform: translateX(0) translateY(0) scaleX(1) scaleY(1);
+        opacity: 0.3;
+    }
+    
+    25% { 
+        transform: translateX(-20px) translateY(-2px) scaleX(0.98) scaleY(1.02);
+        opacity: 0.35;
+    }
+    
+    50% { 
+        transform: translateX(-35px) translateY(-15px) scaleX(0.9) scaleY(1.1);
+        opacity: 0.4;
+    }
+    
+    75% { 
+        transform: translateX(-25px) translateY(2px) scaleX(1.05) scaleY(0.9);
+        opacity: 0.38;
+    }
+}
+
+/* FIGHTER TWO - DEFENSIVE COUNTER SEQUENCE */
+@keyframes fighterTwoSequence {
+    /* Defensive Stance */
+    0%, 100% {
+        transform: translateX(0) translateY(0) scaleX(1) scaleY(1) rotate(0deg);
+        opacity: 0.18;
+        animation-timing-function: ease-out;
+    }
+    
+    /* Anticipate Incoming Attack - Duck */
+    12% {
+        transform: translateX(-8px) translateY(6px) scaleX(1.1) scaleY(0.8) rotate(15deg);
+        opacity: 0.25;
+        animation-timing-function: ease-in;
+    }
+    
+    /* Block High Punch - Raise Guard */
+    20% {
+        transform: translateX(-15px) translateY(-12px) scaleX(0.9) scaleY(1.15) rotate(-10deg);
+        opacity: 0.32;
+        animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    
+    /* Counter Punch - Quick Jab */
+    24% {
+        transform: translateX(-25px) translateY(-8px) scaleX(1.2) scaleY(0.85) rotate(8deg);
+        opacity: 0.4;
+        animation-timing-function: ease-out;
+    }
+    
+    /* Dodge Back - Evasive Movement */
+    32% {
+        transform: translateX(-35px) translateY(-15px) scaleX(0.85) scaleY(1.1) rotate(-20deg);
+        opacity: 0.28;
+        animation-timing-function: ease-in-out;
+    }
+    
+    /* Counter Jump - Evade Jump Kick */
+    40% {
+        transform: translateX(-45px) translateY(-40px) scaleX(0.8) scaleY(1.25) rotate(12deg);
+        opacity: 0.35;
+        animation-timing-function: cubic-bezier(0.55, 0.085, 0.68, 0.53);
+    }
+    
+    /* Peak Counter Jump */
+    44% {
+        transform: translateX(-50px) translateY(-50px) scaleX(0.75) scaleY(1.35) rotate(18deg);
+        opacity: 0.42;
+        animation-timing-function: linear;
+    }
+    
+    /* Landing with Counter Kick */
+    52% {
+        transform: translateX(-55px) translateY(-20px) scaleX(0.9) scaleY(1.2) rotate(-25deg);
+        opacity: 0.45;
+        animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    /* Impact Landing - Squash */
+    56% {
+        transform: translateX(-60px) translateY(3px) scaleX(1.15) scaleY(0.7) rotate(-5deg);
+        opacity: 0.48;
+        animation-timing-function: ease-out;
+    }
+    
+    /* Roll Recovery */
+    64% {
+        transform: translateX(-40px) translateY(5px) scaleX(1.0) scaleY(1.0) rotate(-90deg);
+        opacity: 0.3;
+        animation-timing-function: ease-in-out;
+    }
+    
+    /* Rise from Roll */
+    68% {
+        transform: translateX(-35px) translateY(-2px) scaleX(0.95) scaleY(1.05) rotate(-180deg);
+        opacity: 0.32;
+        animation-timing-function: ease-out;
+    }
+    
+    /* Counter Spinning Attack */
+    76% {
+        transform: translateX(-25px) translateY(-18px) scaleX(1.1) scaleY(0.9) rotate(-315deg);
+        opacity: 0.4;
+        animation-timing-function: ease-in;
+    }
+    
+    /* Complete Counter Spin */
+    80% {
+        transform: translateX(-20px) translateY(-12px) scaleX(0.95) scaleY(1.05) rotate(-360deg);
+        opacity: 0.38;
+        animation-timing-function: ease-out;
+    }
+    
+    /* Final Defensive Position */
+    88% {
+        transform: translateX(-12px) translateY(-5px) scaleX(1.02) scaleY(0.98) rotate(8deg);
+        opacity: 0.25;
+        animation-timing-function: ease-in-out;
+    }
+    
+    /* Return to Ready Stance */
+    96% {
+        transform: translateX(-3px) translateY(-1px) scaleX(1.01) scaleY(0.99) rotate(2deg);
+        opacity: 0.2;
+        animation-timing-function: ease-out;
+    }
+}
+
+/* REALISTIC COMBAT IMPACT EFFECTS */
+.combat-impact {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(185, 28, 28, 0.6) 30%, transparent 70%);
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    animation: impactBurst 12s ease-out infinite;
+    animation-delay: -0.5s;
+    z-index: 2;
+}
+
+@keyframes impactBurst {
+    0%, 95%, 100% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+    
+    /* Impact when Fighter 1 jab connects (16%) */
+    16% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.8;
+    }
+    
+    17% {
+        transform: translate(-50%, -50%) scale(0.6);
+        opacity: 0.3;
+    }
+    
+    /* Major impact when jump kick connects (40%) */
+    40% {
+        transform: translate(-50%, -50%) scale(2.5);
+        opacity: 1;
+    }
+    
+    42% {
+        transform: translate(-50%, -50%) scale(1.8);
+        opacity: 0.6;
+    }
+    
+    44% {
+        transform: translate(-50%, -50%) scale(0.4);
+        opacity: 0.1;
+    }
+    
+    /* Spinning attack impact (76%) */
+    76% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0.9;
+    }
+    
+    78% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.4;
+    }
+    
+    80% {
+        transform: translate(-50%, -50%) scale(0.2);
+        opacity: 0.05;
+    }
+}
+
+/* Ground Dust Effects */
+.karate-animation::before {
+    content: '';
+    position: absolute;
+    bottom: 30%;
+    left: 0;
+    right: 0;
+    height: 25px;
+    background: 
+        radial-gradient(ellipse at 35% 100%, rgba(139, 139, 139, 0.15) 0%, transparent 60%),
+        radial-gradient(ellipse at 65% 100%, rgba(139, 139, 139, 0.12) 0%, transparent 50%);
+    animation: groundDust 12s ease-in-out infinite;
+    z-index: 0;
+}
+
+@keyframes groundDust {
+    0%, 100% {
+        opacity: 0.1;
+        transform: scaleX(1) scaleY(1);
+    }
+    
+    /* Dust from footwork and landings */
+    8%, 28%, 52%, 64%, 84% {
+        opacity: 0.3;
+        transform: scaleX(1.3) scaleY(1.8);
+    }
+    
+    12%, 32%, 56%, 68%, 88% {
+        opacity: 0.15;
+        transform: scaleX(1.1) scaleY(1.2);
+    }
+    
+    /* Major dust from jump landings */
+    52%, 56% {
+        opacity: 0.5;
+        transform: scaleX(2) scaleY(2.5);
+    }
+}
+
+/* Combat Motion Blur Effect */
+.karate-person svg {
+    filter: none;
+    transition: filter 0.05s ease-out;
+}
+
+.karate-person-1 svg {
+    animation: motionBlur1 12s ease-out infinite;
+}
+
+.karate-person-2 svg {
+    animation: motionBlur2 12s ease-out infinite;
+}
+
+@keyframes motionBlur1 {
+    0%, 100% {
+        filter: blur(0px);
+    }
+    
+    /* Motion blur during fast movements */
+    16%, 40%, 72% {
+        filter: blur(1px);
+    }
+    
+    18%, 42%, 74% {
+        filter: blur(0px);
+    }
+}
+
+@keyframes motionBlur2 {
+    0%, 100% {
+        filter: blur(0px);
+    }
+    
+    /* Motion blur for counter movements */
+    24%, 44%, 76% {
+        filter: blur(0.8px);
+    }
+    
+    26%, 46%, 78% {
+        filter: blur(0px);
+    }
+}
+
+/* Professional Animation Container */
+.karate-stage-container {
+    position: relative;
+    min-height: 300px;
+    overflow: hidden;
+    background: linear-gradient(135deg, 
+        rgba(249, 250, 251, 0.8) 0%, 
+        rgba(243, 244, 246, 0.9) 50%, 
+        rgba(249, 250, 251, 0.8) 100%);
+    border-radius: 1rem;
+    box-shadow: 
+        inset 0 1px 3px rgba(185, 28, 28, 0.05),
+        0 4px 6px rgba(0, 0, 0, 0.02);
+}
+
+/* Performance optimizations for smooth animation */
+.karate-person svg {
+    will-change: transform;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .karate-person {
+        width: 90px;
+        height: 90px;
+        opacity: 0.10;
+    }
+    
+    .karate-person-1 {
+        left: 10%;
+    }
+    
+    .karate-person-2 {
+        right: 10%;
+    }
+    
+    .karate-stage-container {
+        min-height: 250px;
+        margin: 0 -15px;
+        border-radius: 0;
+    }
+    
+    /* Reduce animation intensity on mobile */
+    @keyframes masterKataSequence {
+        0%, 100% {
+            transform: translateY(0) rotate(0deg) scale(1) rotateY(0deg);
+            opacity: 0.08;
+        }
+        20% {
+            transform: translateY(-8px) rotate(15deg) scale(1.05) rotateY(8deg);
+            opacity: 0.14;
+        }
+        40% {
+            transform: translateY(-5px) rotate(-12deg) scale(0.95) rotateY(-6deg);
+            opacity: 0.16;
+        }
+        60% {
+            transform: translateY(-10px) rotate(18deg) scale(1.08) rotateY(10deg);
+            opacity: 0.15;
+        }
+        80% {
+            transform: translateY(-6px) rotate(-8deg) scale(0.98) rotateY(-4deg);
+            opacity: 0.12;
+        }
+    }
+    
+    @keyframes counterKataSequence {
+        0%, 100% {
+            transform: translateY(0) rotate(0deg) scale(1) rotateY(0deg);
+            opacity: 0.08;
+        }
+        25% {
+            transform: translateY(-6px) rotate(-15deg) scale(1.03) rotateY(-8deg);
+            opacity: 0.14;
+        }
+        50% {
+            transform: translateY(-8px) rotate(20deg) scale(0.96) rotateY(10deg);
+            opacity: 0.16;
+        }
+        75% {
+            transform: translateY(-4px) rotate(-10deg) scale(1.06) rotateY(-5deg);
+            opacity: 0.13;
+        }
+    }
+}
+
+@media (max-width: 576px) {
+    .karate-person {
+        width: 70px;
+        height: 70px;
+        opacity: 0.08;
+    }
+    
+    .karate-stage-container {
+        min-height: 200px;
+    }
+    
+    .karate-person-1 {
+        left: 8%;
+        top: 35%;
+    }
+    
+    .karate-person-2 {
+        right: 8%;
+        top: 35%;
+    }
+}
+
+/* Ultra-smooth hardware acceleration */
+.karate-animation,
+.karate-person,
+.karate-person svg,
+.karate-animation::before {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* Prevent animation jank */
+@media (prefers-reduced-motion: reduce) {
+    .karate-person {
+        animation-duration: 30s;
+        animation-timing-function: linear;
+    }
+    
+    .karate-animation::before {
+        animation: none;
+    }
+}
+
+/* High-end displays optimization */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .karate-person {
+        filter: drop-shadow(0 2px 4px rgba(185, 28, 28, 0.08));
+    }
+}
